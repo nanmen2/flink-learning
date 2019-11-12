@@ -1,0 +1,41 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### Mac ###
+.DS_Store
+
+### Spring Dev Credentials ###
+# Spring敏感配置数据放在这里
+# config/*.yml
+
+### Docker Test Credentials ###
+# Docker敏感配置数据放在这里
+# .env
+
+### K8s Credentials
+k8s/dev/config/config.yaml
+k8s/test/config/config.yaml
+k8s/prod/config/config.yaml
