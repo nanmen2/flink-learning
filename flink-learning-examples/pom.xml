@@ -57,7 +57,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <!--注意：这里一定要换成你自己的 Job main 方法的启动类-->
-                                    <mainClass>com.zhisheng.wordcount.Main</mainClass>
+                                    <mainClass>ccom.akun.streaming.examples.socket.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
