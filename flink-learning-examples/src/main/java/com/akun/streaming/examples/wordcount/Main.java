@@ -45,7 +45,7 @@ public class Main {
         env.execute("akun —— word count streaming demo");
     }
 
-        private static final String[] WORDS = new String[]{
+    private static final String[] WORDS = new String[]{
             "To be, or not to be,--that is the question:--",
             "Whether 'tis nobler in the mind to suffer"
     };
