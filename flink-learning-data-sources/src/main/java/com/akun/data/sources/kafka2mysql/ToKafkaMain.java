@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * @author akun
  * @date 2019/11/14
  */
-public class ToKafka {
+public class ToKafkaMain {
 
     private static final String BROKER_LIST = "47.98.182.82:9092";
     /**

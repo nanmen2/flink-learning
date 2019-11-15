@@ -13,7 +13,7 @@ import java.util.Properties;
  * @author akun
  * @date 2019/11/15
  */
-public class Main {
+public class KafkaToMySQLMain {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
