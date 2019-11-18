@@ -17,31 +17,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static com.akun.data.sources.constants.PropertiesConstants.*;
-
 /**
  * @author akun
-
  */
 public class KafkaConfigUtil {
 
     /**
      * 设置 kafka 配置
      *
-     * @param parameterTool
      * @return
      */
-    public static Properties buildKafkaProps(ParameterTool parameterTool) {
-        Properties props = parameterTool.getProperties();
-        props.put("bootstrap.servers", parameterTool.get(PropertiesConstants.KAFKA_BROKERS, DEFAULT_KAFKA_BROKERS));
-        props.put("zookeeper.connect", parameterTool.get(PropertiesConstants.KAFKA_ZOOKEEPER_CONNECT, DEFAULT_KAFKA_ZOOKEEPER_CONNECT));
-        props.put("group.id", parameterTool.get(PropertiesConstants.KAFKA_GROUP_ID, DEFAULT_KAFKA_GROUP_ID));
+    public static Properties buildKafkaProps() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "47.98.182.82:9092");
+        props.put("zookeeper.connect", "47.98.182.82:2181");
+        props.put("group.id", "metric-group");
+        //key 反序列化
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        //value 反序列化
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("auto.offset.reset", "latest");
         return props;
     }
-
 
 
     public static DataStreamSource<MetricEvent> buildSource(StreamExecutionEnvironment env) throws IllegalAccessException {
@@ -59,24 +56,23 @@ public class KafkaConfigUtil {
      * @throws IllegalAccessException
      */
     public static DataStreamSource<MetricEvent> buildSource(StreamExecutionEnvironment env, String topic, Long time) throws IllegalAccessException {
-        ParameterTool parameterTool = (ParameterTool) env.getConfig().getGlobalJobParameters();
-        Properties props = buildKafkaProps(parameterTool);
+        Properties props = buildKafkaProps();
         FlinkKafkaConsumer<MetricEvent> consumer = new FlinkKafkaConsumer<>(
                 topic,
                 new MetricSchema(),
                 props);
         //重置offset到time时刻
         if (time != 0L) {
-            Map<KafkaTopicPartition, Long> partitionOffset = buildOffsetByTime(props, parameterTool, time);
+            Map<KafkaTopicPartition, Long> partitionOffset = buildOffsetByTime(props, time);
             consumer.setStartFromSpecificOffsets(partitionOffset);
         }
         return env.addSource(consumer);
     }
 
-    private static Map<KafkaTopicPartition, Long> buildOffsetByTime(Properties props, ParameterTool parameterTool, Long time) {
+    private static Map<KafkaTopicPartition, Long> buildOffsetByTime(Properties props, Long time) {
         props.setProperty("group.id", "query_time_" + time);
         KafkaConsumer consumer = new KafkaConsumer(props);
-        List<PartitionInfo> partitionsFor = consumer.partitionsFor(parameterTool.getRequired(PropertiesConstants.METRICS_TOPIC));
+        List<PartitionInfo> partitionsFor = consumer.partitionsFor("metric-group");
         Map<TopicPartition, Long> partitionInfoLongMap = new HashMap<>();
         for (PartitionInfo partitionInfo : partitionsFor) {
             partitionInfoLongMap.put(new TopicPartition(partitionInfo.topic(), partitionInfo.partition()), time);
