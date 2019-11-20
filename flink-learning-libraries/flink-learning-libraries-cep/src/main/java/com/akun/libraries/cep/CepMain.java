@@ -21,13 +21,11 @@ import java.util.Map;
  */
 public class CepMain {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CepMain.class);
+    private static final Logger logger = LoggerFactory.getLogger(CepMain.class);
 
-    public static void main(String[] args) {
-        //1、创建流程序的运行环境
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-        SingleOutputStreamOperator<Event> eventDataStream = env.socketTextStream("47.98.182.82", 9200)
+    public static void main(String[] args) throws Exception {
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        SingleOutputStreamOperator<Event> eventDataStream = env.socketTextStream("127.0.0.1", 9000)
                 .flatMap(new FlatMapFunction<String, Event>() {
                     @Override
                     public void flatMap(String s, Collector<Event> collector) throws Exception {
@@ -40,11 +38,12 @@ public class CepMain {
                     }
                 });
 
+
         Pattern<Event, ?> pattern = Pattern.<Event>begin("start").where(
                 new SimpleCondition<Event>() {
                     @Override
                     public boolean filter(Event event) {
-                        LOG.info("start {}", event.getId());
+                        logger.info("start {}", event.getId());
                         return event.getId() == 42;
                     }
                 }
@@ -52,7 +51,7 @@ public class CepMain {
                 new SimpleCondition<Event>() {
                     @Override
                     public boolean filter(Event event) {
-                        LOG.info("middle {}", event.getId());
+                        logger.info("middle {}", event.getId());
                         return event.getId() >= 10;
                     }
                 }
@@ -62,11 +61,14 @@ public class CepMain {
             @Override
             public String select(Map<String, List<Event>> p) throws Exception {
                 StringBuilder builder = new StringBuilder();
-                LOG.info("p = {}", p);
+                logger.info("p = {}", p);
                 builder.append(p.get("start").get(0).getId()).append(",").append(p.get("start").get(0).getName()).append("\n")
                         .append(p.get("middle").get(0).getId()).append(",").append(p.get("middle").get(0).getName());
                 return builder.toString();
             }
         }).print();//打印结果
+
+        env.execute("flink learning cep");
+
     }
 }

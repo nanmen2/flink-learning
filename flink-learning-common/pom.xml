@@ -61,5 +61,11 @@
             <version>1.2.51</version>
         </dependency>
 
+        <!--state backend-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-statebackend-rocksdb_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
     </dependencies>
 </project>

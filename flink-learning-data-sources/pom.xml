@@ -13,6 +13,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>com.akun.flink</groupId>
+            <artifactId>flink-learning-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- mysql -->
         <dependency>
             <groupId>mysql</groupId>
