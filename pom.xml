@@ -11,6 +11,8 @@
     <modules>
         <module>flink-learning-examples</module>
         <module>flink-learning-data-sources</module>
+        <module>flink-learning-libraries</module>
+        <module>flink-learning-common</module>
     </modules>
     <!--    <modules>-->
 <!--        <module>flink-learning-common</module>-->
